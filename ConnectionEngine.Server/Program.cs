@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
-    opt.UseSqlite("Data Source=ConnectionEngine.db");
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 });
 
