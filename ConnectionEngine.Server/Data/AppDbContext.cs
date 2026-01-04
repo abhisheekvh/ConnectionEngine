@@ -1,11 +1,15 @@
 ﻿using ConnectionEngine.Server.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace ConnectionEngine.Server.Data
 {
-    public class AppDbContext(DbContextOptions options) : DbContext(options)
+    public class AppDbContext:IdentityDbContext<ApplicationUser>
     {
-        public DbSet<AppUser> Users { get; set; }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
     }
 
 }

@@ -1,0 +1,21 @@
+<div class="min-h-screen flex items-center justify-center bg-base-200">
+  <div class="card w-96 bg-base-100 shadow-xl">
+    <div class="card-body space-y-4">
+      <h2 class="card-title justify-center">Sign Up</h2>
+
+      <input type="email"
+             placeholder="Email"
+             class="input input-bordered w-full"
+             [(ngModel)]="email" />
+
+      <input type="password"
+             placeholder="Password"
+             class="input input-bordered w-full"
+             [(ngModel)]="password" />
+
+      <button class="btn btn-primary w-full" (click)="register()">
+        Register
+      </button>
+    </div>
+  </div>
+</div>
