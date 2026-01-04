@@ -21,22 +21,20 @@ export class SignupComponent {
     console.log('Registering user:', this.email)
 
 
-    this.http.post('/api/auth/register', {
-      email: this.email,
-      password: this.password
-    }).subscribe({
+    this.http.post('/api/auth/register',
+      {
+        email: this.email,
+        password: this.password
+      },
+      { responseType: 'text' }
+    ).subscribe({
       next: res => {
-        alert('Signup successful. Setup 2FA.');
-        console.log(res);
+        alert(res);
       },
       error: err => {
         console.error(err);
-        alert(
-          err?.error?.[0]?.description ||
-          err?.error ||
-          'Signup failed'
-        );
       }
     });
+
   }
 }

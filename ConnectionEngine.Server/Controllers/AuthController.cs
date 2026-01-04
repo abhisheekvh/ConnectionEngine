@@ -44,7 +44,10 @@ namespace ConnectionEngine.Server.Controllers
 
             await _userManager.SetTwoFactorEnabledAsync(user, true);
 
-            return Ok("User created. Setup 2FA.");
+            return Ok(new
+            {
+                message = "User created. Setup 2FA."
+            });
         }
         [HttpGet("2fa/setup")]
         public async Task<IActionResult> Setup2FA([FromQuery] string email)
