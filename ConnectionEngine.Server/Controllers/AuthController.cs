@@ -3,6 +3,7 @@ using ConnectionEngine.Server.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -129,7 +130,11 @@ namespace ConnectionEngine.Server.Controllers
             var token = GenerateJwt(user);
             SetCookie(token);
 
-            return Ok("Login successful");
+            return Ok(new
+            {
+                Message = "Login Successful",
+                
+            });
         }
         private string GenerateJwt(ApplicationUser user)
         {
