@@ -3,19 +3,25 @@ using ConnectionEngine.Server.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Controllers
+
 builder.Services.AddControllers();
 
-// DbContext
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-// Identity
+
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 8;
@@ -24,23 +30,53 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
 
-// JWT (basic registration – we’ll tighten later)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer();
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
 
-builder.Services.AddOpenApi();
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+        ),
+
+        ClockSkew = TimeSpan.Zero
+    };
+
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            if (context.Request.Cookies.ContainsKey("access_token"))
+            {
+                context.Token = context.Request.Cookies["access_token"];
+            }
+            return Task.CompletedTask;
+        }
+    };
+});
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Swagger
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-app.UseRouting();
-app.UseAuthentication();    
+
+app.UseAuthentication();  
 app.UseAuthorization();
 
 app.MapControllers();

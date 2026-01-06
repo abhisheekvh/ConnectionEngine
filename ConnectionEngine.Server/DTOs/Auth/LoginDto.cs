@@ -1,4 +1,11 @@
 ﻿namespace ConnectionEngine.Server.DTOs.Auth
 {
-    public record LoginDto(string Email, string Password, string Otp);
+
+
+    public class LoginDto
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string Otp { get; set; }= string.Empty;
+    }
 }
