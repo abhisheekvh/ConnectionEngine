@@ -25,7 +25,7 @@ namespace ConnectionEngine.Server.Controllers
             public IActionResult Profile()
             {
 
-                var userId = User.FindFirstValue(ClaimTypes.Email)
+                var userId = User.FindFirstValue(ClaimTypes.Email) 
                           ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
                 if (userId == null)
