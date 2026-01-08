@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';   
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
+import { ProfileComponent } from '../../User/profile/profile.component';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +21,8 @@ export class LoginComponent {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private auth: AuthService
   ) { }
   login() {
     return this.http.post(
@@ -31,7 +34,14 @@ export class LoginComponent {
       },
       { withCredentials: true }
     ).subscribe({
-      next: () => alert('Login successful'),
+      next: () => {
+        this.auth.setLogin(),
+          this.router.navigate(['/profile']);
+          this.email = '';
+        this.password = '';
+        this.otp = '';
+      },
+
       error: err => alert(err.error)
     });
   }

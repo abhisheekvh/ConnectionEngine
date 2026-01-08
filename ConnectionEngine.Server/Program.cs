@@ -2,6 +2,7 @@ using ConnectionEngine.Server.Data;
 using ConnectionEngine.Server.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -61,6 +62,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             return Task.CompletedTask;
         }
     };
+    builder.Services.AddRateLimiter(options =>
+    {
+        options.AddFixedWindowLimiter("auth", opt =>
+        {
+            opt.Window = TimeSpan.FromMinutes(1);
+            opt.PermitLimit = 5;
+        });
+    });
+
 });
 
 builder.Services.AddAuthorization();
