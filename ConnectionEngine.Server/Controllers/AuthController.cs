@@ -119,4 +119,20 @@ public class AuthController : ControllerBase
             SameSite = SameSiteMode.Strict
         });
     }
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("access_token", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict
+        });
+
+        return Ok(new
+        {
+            message = "Logged out successfully"
+        });
+    }
+
 }
