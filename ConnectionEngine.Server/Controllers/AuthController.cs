@@ -68,9 +68,17 @@ public class AuthController : ControllerBase
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
         if (user == null) return Unauthorized();
+        if(await _userManager.IsLockedOutAsync(user))
+        {
+            return Unauthorized("Account locked! Please try after 15 min.");
+        }
 
         if (!await _userManager.CheckPasswordAsync(user, dto.Password))
+        {
+            await _userManager.AccessFailedAsync(user);
             return Unauthorized("Invalid credentials");
+        }
+        await _userManager.ResetAccessFailedCountAsync(user);
 
         var otpValid = await _userManager.VerifyTwoFactorTokenAsync(
             user,
