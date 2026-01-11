@@ -13,29 +13,48 @@ namespace ConnectionEngine.Server.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MemberController : ControllerBase
     {
-        
-            private readonly AppDbContext _context;
 
-            public MemberController(AppDbContext context)
+        private readonly AppDbContext _context;
+
+        public MemberController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet("profile")]
+        public IActionResult Profile()
+        {
+
+            var userId = User.FindFirstValue(ClaimTypes.Email)
+                      ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+            if (userId == null)
+                return Unauthorized();
+
+            return Ok(new
             {
-                _context = context;
-            }
+                userId,
+                Initial = GetInitial(userId),
+                email = GetEmail(userId)
+            });
+        }
+        private string GetInitial(string userId)
+        {
 
-            [HttpGet("profile")]
-            public IActionResult Profile()
+            if (string.IsNullOrEmpty(userId))
             {
-
-                var userId = User.FindFirstValue(ClaimTypes.Email) 
-                          ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-
-                if (userId == null)
-                    return Unauthorized();
-
-                return Ok(new
-                {
-                    userId
-                });
+                return "U";
             }
+            return userId.Substring(0, 2).ToUpper();
+        }
+        private string GetEmail(string userId)
+        {
+            if(string.IsNullOrEmpty(userId))
+            {
+                return "Undifined";
+            }
+            return userId;
         }
     }
+}
 

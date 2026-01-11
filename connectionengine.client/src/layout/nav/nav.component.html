@@ -1,0 +1,59 @@
+<header class="w-full h-16 flex items-center justify-between px-6 border-b bg-white shadow-sm">
+
+  <!-- LEFT -->
+  <div class="flex items-center gap-6">
+    <span class="text-xl font-bold text-gray-900">
+      Connection Engine
+    </span>
+
+    <a routerLink="/explore"
+       class="text-sm text-gray-600 hover:text-black transition">
+      Matches
+    </a>
+    <a routerLink="/explore"
+       class="text-sm text-gray-600 hover:text-black transition">
+      List
+    </a>
+    <a routerLink="/explore"
+       class="text-sm text-gray-600 hover:text-black transition">
+      Messages
+    </a>
+  </div>
+
+ 
+
+  <div class="flex items-center gap-4 text-sm">
+
+    <a class="text-gray-600 hover:text-black cursor-pointer" (click)="GetCurrentLocation()">
+      Search Nearby
+    </a>
+
+    <a class="text-gray-600 hover:text-black cursor-pointer">
+      Business
+    </a>
+
+    <a class="text-gray-600 hover:text-black cursor-pointer">
+      Teach
+    </a>
+
+    <div class="flex items-center gap-4" *ngIf="authService.isLoggedIn()">
+
+      <div class="h-9 w-9 rounded-full bg-indigo-600
+           text-white flex items-center justify-center
+           font-semibold">
+        {{ userInitial }}
+      </div>
+
+      <span class="text-sm text-gray-700">
+        {{ email }}
+      </span>
+
+      <button (click)="logout()"
+              class="text-red-600 hover:text-red-700">
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+</header>

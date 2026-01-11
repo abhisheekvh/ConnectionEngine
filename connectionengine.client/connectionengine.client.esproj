@@ -9,5 +9,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
+    <Folder Include="src\layout\" />
+    <Folder Include="src\features\" />
+    <Folder Include="src\core\" />
+    <Folder Include="src\Services\" />
+    <Folder Include="src\shared\" />
   </ItemGroup>
 </Project>

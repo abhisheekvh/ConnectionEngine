@@ -68,15 +68,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             return Task.CompletedTask;
         }
     };
-    builder.Services.AddRateLimiter(options =>
-    {
-        options.AddFixedWindowLimiter("auth", opt =>
-        {
-            opt.Window = TimeSpan.FromMinutes(1);
-            opt.PermitLimit = 5;
-        });
-    });
+   
 
+});
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("auth", opt =>
+    {
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.PermitLimit = 5;
+    });
 });
 
 builder.Services.AddAuthorization();
@@ -91,6 +92,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 
 app.UseAuthentication();  
 app.UseAuthorization();

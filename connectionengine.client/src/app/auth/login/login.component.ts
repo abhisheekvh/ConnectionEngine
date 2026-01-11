@@ -18,7 +18,6 @@ export class LoginComponent {
   email = '';
   password = '';
   otp = '';
-
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -36,12 +35,11 @@ export class LoginComponent {
     ).subscribe({
       next: () => {
         this.auth.setLogin(),
-        this.router.navigate(['../../profile']);
+          this.router.navigate(['../../profile']);
           this.email = '';
         this.password = '';
         this.otp = '';
       },
-
       error: err => alert(err.error)
     });
   }
