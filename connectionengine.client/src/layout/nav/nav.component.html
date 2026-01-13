@@ -1,58 +1,68 @@
 <header class="w-full h-16 flex items-center justify-between px-6 border-b bg-white shadow-sm">
 
-  <!-- LEFT -->
+  <!-- Left -->
   <div class="flex items-center gap-6">
     <span class="text-xl font-bold text-gray-900">
       Connection Engine
     </span>
 
     <a routerLink="/explore"
+       *ngIf="authService.isLoggedIn()"
        class="text-sm text-gray-600 hover:text-black transition">
       Matches
     </a>
-    <a routerLink="/explore"
-       class="text-sm text-gray-600 hover:text-black transition">
-      List
-    </a>
-    <a routerLink="/explore"
+
+    <a routerLink="/messages"
+       *ngIf="authService.isLoggedIn()"
        class="text-sm text-gray-600 hover:text-black transition">
       Messages
     </a>
   </div>
 
- 
+  <!-- Right -->
+  <div class="flex items-center gap-4 text-sm" *ngIf="authService.isLoggedIn()">
 
-  <div class="flex items-center gap-4 text-sm">
-
-    <a class="text-gray-600 hover:text-black cursor-pointer" (click)="GetCurrentLocation()">
+    <a class="text-gray-600 hover:text-black cursor-pointer"
+       (click)="GetCurrentLocation()">
       Search Nearby
     </a>
 
-    <a class="text-gray-600 hover:text-black cursor-pointer">
-      Business
+    <a routerLink="/profile"
+       class="text-gray-600 hover:text-black cursor-pointer">
+      Create Profile
     </a>
 
-    <a class="text-gray-600 hover:text-black cursor-pointer">
-      Teach
-    </a>
+    <!-- User Dropdown -->
+    <div class="dropdown dropdown-end">
 
-    <div class="flex items-center gap-4" *ngIf="authService.isLoggedIn()">
+      <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+        <div class="w-9 rounded-full bg-indigo-600 text-white
+                    flex items-center justify-center font-semibold">
+          {{ userInitial }}
+        </div>
+      </label>
 
-      <div class="h-9 w-9 rounded-full bg-indigo-600
-           text-white flex items-center justify-center
-           font-semibold">
-        {{ userInitial }}
-      </div>
+      <ul tabindex="0"
+          class="dropdown-content menu p-2 shadow bg-base-100
+                 rounded-box w-52 mt-2">
 
-      <span class="text-sm text-gray-700">
-        {{ email }}
-      </span>
+        <li class="px-2 py-1 text-sm text-gray-500">
+          {{ email }}
+        </li>
 
-      <button (click)="logout()"
-              class="text-red-600 hover:text-red-700">
-        Logout
-      </button>
+        <li>
+          <a routerLink="/profile">👤 Profile</a>
+        </li>
 
+        <li>
+          <a routerLink="/search-nearby">📍 Search Nearby</a>
+        </li>
+
+        <li class="border-t mt-1">
+          <a class="text-red-600" (click)="logout()">🚪 Logout</a>
+        </li>
+
+      </ul>
     </div>
 
   </div>

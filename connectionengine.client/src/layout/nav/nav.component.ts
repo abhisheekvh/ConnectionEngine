@@ -8,7 +8,7 @@ import { LocationService } from '../../Services/location.service';
 
 @Component({
   selector: 'app-nav',
-  imports: [CommonModule, RouterModule, RouterOutlet],
+  imports: [CommonModule, RouterModule],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css'
 })
