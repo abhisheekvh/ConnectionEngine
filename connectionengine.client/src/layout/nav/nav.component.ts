@@ -1,37 +1,61 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { AuthService } from '../../app/auth/auth/auth.service'
-import { RouterModule, Router, RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../app/auth/auth/auth.service';
 import { LocationService } from '../../Services/location.service';
-
 
 @Component({
   selector: 'app-nav',
-  imports: [CommonModule, RouterModule],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './nav.component.html',
-  styleUrl: './nav.component.css'
+  styleUrls: ['./nav.component.css']
 })
-export class NavComponent {
-  email = ''
-  userInitial = ''
-  constructor(private http: HttpClient, public authService: AuthService, private router: Router, private location: LocationService ) { }
+export class NavComponent implements OnInit {
+
+  email = '';
+  userInitial = '';
+  isLoggedIn=false
+
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private locationService: LocationService
+  ) { }
+
   ngOnInit(): void {
-    this.authService.user$.subscribe(user => {
-      if (user) {
+    this.loadUserInfo();
+    this.authService.isLoggedIn$().subscribe(isAuth => {
+      this.isLoggedIn = isAuth;
+      if (!isAuth) {
+        this.email = '';
+        this.userInitial = '';
+      }
+    })
+  }
+
+  private loadUserInfo(): void {
+    this.http.get<any>(
+      '/api/member/profile',
+      { withCredentials: true }
+    ).subscribe({
+      next: user => {
         this.email = user.email;
-        this.userInitial = user.email.charAt(0).toUpperCase();
+        this.userInitial = user.email?.charAt(0).toUpperCase();
+      },
+      error: () => {
+        // do nothing — guard handles auth
       }
     });
   }
-  logout() {
-    this.authService.isLoggedOut();
-    this.router.navigate(['/login']);
-  }
-  GetCurrentLocation() {
-    this.location.getCurrentLocation();
-  }
-  
-  
 
+  logout(): void {
+    this.authService.logout().subscribe(() => {
+      window.location.href = '/login';
+    });
+  }
+
+  getCurrentLocation(): void {
+    this.locationService.getCurrentLocation();
+  }
 }

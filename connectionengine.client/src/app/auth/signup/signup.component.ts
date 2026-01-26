@@ -5,15 +5,10 @@ import { HttpClient } from '@angular/common/http';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-signup',
-  standalone: true,                   
-  imports: [
-    CommonModule,                     
-    FormsModule,                       
-    QRCodeComponent                       
-  ],
+  standalone: true,
+  imports: [CommonModule, FormsModule, QRCodeComponent],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
@@ -28,12 +23,10 @@ export class SignupComponent {
 
   constructor(
     private http: HttpClient,
-    private router: Router  
+    private router: Router
   ) { }
 
   register() {
-    console.log('Registering user:', this.email);
-
     this.http.post(
       '/api/auth/register',
       {
@@ -42,13 +35,8 @@ export class SignupComponent {
       },
       { responseType: 'text' }
     ).subscribe({
-      next: () => {
-        this.generateQrCode();
-      },
-      error: err => {
-        console.error(err);
-        alert('Signup failed');
-      }
+      next: () => this.generateQrCode(),
+      error: () => alert('Signup failed')
     });
   }
 
@@ -61,10 +49,7 @@ export class SignupComponent {
         this.sharedKey = res.sharedKey;
         this.showQr = true;
       },
-      error: err => {
-        console.error(err);
-        alert('Failed to generate QR code');
-      }
+      error: () => alert('Failed to generate QR code')
     });
   }
 

@@ -1,42 +1,45 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private userSubject = new BehaviorSubject<any>(null);
-  user$ = this.userSubject.asObservable();
-  constructor(private http: HttpClient,) { }
 
-  setUser(user: any) {
-    this.userSubject.next(user);
-  }
-  isLoggedIn(): boolean {
+  private loggedIn$ = new BehaviorSubject<boolean>(false);
 
-    return !!this.userSubject.value;
+  constructor(private http: HttpClient) { }
+
+  /** Called on app start or refresh */
+  isAuthenticated(): Observable<boolean> {
+    return this.http.get<{ email?: string }>(
+      '/api/auth/authloggeduser',
+      { withCredentials: true }
+    ).pipe(
+      map(res => !!res?.email),
+      tap(isAuth => this.loggedIn$.next(isAuth)),
+      catchError(() => {
+        this.loggedIn$.next(false);
+        return of(false);
+      })
+    );
   }
-  isLoggedOut()
-  {
-    localStorage.removeItem('LoggedIn')
-    return this.http.post(
+
+  /** Read-only observable for UI */
+  isLoggedIn$(): Observable<boolean> {
+    return this.loggedIn$.asObservable();
+  }
+
+  setLoggedIn(): void {
+    this.loggedIn$.next(true);
+  }
+
+  logout(): Observable<void> {
+    this.loggedIn$.next(false);
+    return this.http.post<void>(
       '/api/auth/logout',
       {},
       { withCredentials: true }
-    ).subscribe({
-      next: () => {
-        this.userSubject.next(null);
-      }, error: err => alert(err.error)
-    });
+    );
   }
-  setLogin(): void {
-    localStorage.setItem('LoggedIn', 'true')
-  }
-  getUser() {
-    return this.userSubject.value;
-  }
-
-
-
 }

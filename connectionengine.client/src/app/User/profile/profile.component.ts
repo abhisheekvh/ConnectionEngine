@@ -1,47 +1,47 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { AuthService } from '../../auth/auth/auth.service'
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-
-
+import { AuthService } from '../../auth/auth/auth.service'
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
-  userInitial = ''
-  private userSubject = new BehaviorSubject<any>(null);
-  user$ = this.userSubject.asObservable();
-  errorMsg = ''
-  constructor(private http: HttpClient, private router: Router, public authService: AuthService) { }
+
+  user: any;
+  errorMsg = '';
+
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
-    this.loadUser();
-    //this.GetUserLocation();
+    this.authService.isAuthenticated().subscribe(isAuth => {
+      if (isAuth) {
+        this.loadUser();
+      }
+    });
   }
+
   loadUser() {
     this.http.get<any>(
       '/api/member/profile',
       { withCredentials: true }
     ).subscribe({
-      next: user => {
-        console.log('User profile:', user.email);
-        this.authService.setUser(user);
-      },
+      next: user => this.user = user,
       error: err => {
-        console.error(err);
-        if (err.status == 401) {
+        if (err.status === 401) {
           this.router.navigate(['/login']);
+        } else {
+          alert('Failed to load profile');
         }
-        else
-          alert('Failed to load user profile');
       }
     });
   }
-
 }

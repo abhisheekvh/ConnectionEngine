@@ -2,7 +2,8 @@
 {
     public class CurrentLocation
     {
-        
+        public int Id { get; set; }
+
 
     }
 }

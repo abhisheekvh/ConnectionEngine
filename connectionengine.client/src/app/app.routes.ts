@@ -1,11 +1,25 @@
 import { Routes } from '@angular/router';
-import { SignupComponent } from './auth/signup/signup.component';
 import { LoginComponent } from './auth/login/login.component';
-import { ProfileComponent } from './User/profile/profile.component';
+import { SignupComponent } from './auth/signup/signup.component';
+import { HomeComponent } from '../features/home/home.component';
+import { authGuard } from './auth/auth/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'signup', pathMatch: 'full' },
-  { path: 'signup', component: SignupComponent },
+
+  // 🌐 PUBLIC
   { path: 'login', component: LoginComponent },
-  { path: 'profile', component:ProfileComponent }
+  { path: 'signup', component: SignupComponent },
+
+  // 🔐 PROTECTED
+  {
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [authGuard]
+  },
+
+  // 🔁 default entry
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+  // ❌ fallback
+  { path: '**', redirectTo: 'login' }
 ];

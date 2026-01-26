@@ -77,10 +77,10 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "proxyConfig": "src/proxy.conf.js",
+            "proxyConfig": "proxy.conf.js",
             "port": 54233,
             "ssl": true
-         
+
 
           }
         },

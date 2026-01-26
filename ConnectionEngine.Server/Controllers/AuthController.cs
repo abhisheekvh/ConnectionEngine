@@ -1,5 +1,8 @@
 ﻿using ConnectionEngine.Server.DTOs.Auth;
 using ConnectionEngine.Server.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -21,6 +24,13 @@ public class AuthController : ControllerBase
     {
         _userManager = userManager;
         _config = config;
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpGet("authloggeduser")]
+    public IActionResult authloggeduser()
+    {
+        return  Ok( new { email = User.FindFirstValue(ClaimTypes.Email) });
     }
 
     [HttpPost("register")]
@@ -125,7 +135,8 @@ public class AuthController : ControllerBase
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict
+            SameSite = SameSiteMode.None,  // REQUIRED (Angular is cross-origin)
+            Path = "/",
         });
     }
     [HttpPost("logout")]
