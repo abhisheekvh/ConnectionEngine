@@ -1,72 +1,134 @@
-<header class="w-full h-16 flex items-center justify-between px-6 border-b bg-white shadow-sm">
+<header class="sticky top-0 z-50 w-full">
+  @if (isLoggedIn) {
 
-  @if(isLoggedIn)
-  {
-  <!-- Left -->
-  <div class="flex items-center gap-6">
-    <span class="text-xl font-bold text-gray-900">
-      Connection Engine
-    </span>
+  <div class="navbar bg-base-100 border-b border-base-300 px-6">
 
-    <a routerLink="/explore"
-       class="text-sm text-gray-600 hover:text-black transition">
-      Matches
-    </a>
+    <!-- LEFT -->
+    <div class="navbar-start gap-8">
 
-    <a routerLink="/messages"
-       class="text-sm text-gray-600 hover:text-black transition">
-      Messages
-    </a>
-  </div>
+      <!-- Brand -->
+      <span class="text-lg font-semibold">
+        ConnectionEngine
+      </span>
 
-  <!-- Right -->
-  <div class="flex items-center gap-4 text-sm">
-
-    <a class="text-gray-600 hover:text-black cursor-pointer">
-      Search Nearby
-    </a>
-
-    <a routerLink="/profile"
-       class="text-gray-600 hover:text-black cursor-pointer">
-      Create Profile
-    </a>
-
-    <!-- User Dropdown -->
-    <div class="dropdown dropdown-end">
-
-      <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-        <div class="w-9 rounded-full bg-indigo-600 text-white
-                    flex items-center justify-center font-semibold">
-          {{ userInitial }}
-        </div>
-      </label>
-
-      <ul tabindex="0"
-          class="dropdown-content menu p-2 shadow bg-base-100
-                 rounded-box w-52 mt-2">
-
-        <li class="px-2 py-1 text-sm text-gray-500">
-          {{ email }}
-        </li>
-
+      <!-- Navigation -->
+      <ul class="menu menu-horizontal px-1 text-sm hidden md:flex">
         <li>
-          <a routerLink="/profile">👤 Profile</a>
-        </li>
-
-        <li>
-          <a routerLink="/search-nearby">📍 Search Nearby</a>
-        </li>
-
-        <li class="border-t mt-1">
-          <a class="text-red-600 cursor-pointer"
-             (click)="logout()">
-            🚪 Logout
+          <a routerLink="/explore" routerLinkActive="active">
+            Matches
           </a>
         </li>
-
+        <li>
+          <a routerLink="/messages" routerLinkActive="active">
+            Messages
+          </a>
+        </li>
       </ul>
+
     </div>
 
+    <!-- RIGHT -->
+    <div class="navbar-end gap-3 text-sm">
+
+      <a class="hidden sm:inline-flex btn btn-ghost btn-sm">
+        Search Nearby
+      </a>
+
+      <a routerLink="/profile" class="btn btn-ghost btn-sm">
+        Create Profile
+      </a>
+
+      <!-- USER DROPDOWN -->
+      <div class="dropdown dropdown-end">
+
+        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+          <div class="w-9 rounded-full bg-primary text-primary-content">
+            <span class="text-sm font-medium">
+              {{ userInitial }}
+            </span>
+          </div>
+        </label>
+
+        <ul tabindex="0"
+            class="dropdown-content menu p-2
+                 shadow bg-base-100
+                 rounded-box w-56 mt-3">
+
+          <!-- Email -->
+          <li class="px-3 py-2 text-xs text-base-content/70 truncate">
+            {{ email }}
+          </li>
+
+          <li>
+            <a routerLink="/profile" class="gap-2">
+              <!-- Heroicon: User -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   class="h-5 w-5"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke="currentColor">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5.121 17.804A9 9 0 1118.88 6.196
+                         M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Profile
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="/search-nearby" class="gap-2">
+              <!-- Heroicon: Map Pin -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   class="h-5 w-5"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke="currentColor">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 11c1.657 0 3-1.343 3-3
+                         S13.657 5 12 5s-3 1.343-3 3
+                         1.343 3 3 3z" />
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19.5 8c0 7-7.5 13-7.5 13
+                         S4.5 15 4.5 8a7.5 7.5 0 1115 0z" />
+              </svg>
+              Search Nearby
+            </a>
+          </li>
+
+          <div class="divider my-1"></div>
+
+          <li>
+            <a class="text-error gap-2" (click)="logout()">
+              <!-- Heroicon: Arrow Right On Rectangle -->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   class="h-5 w-5"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke="currentColor">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 16l4-4m0 0l-4-4
+                         m4 4H7m6 4v1
+                         a2 2 0 01-2 2H5
+                         a2 2 0 01-2-2V7
+                         a2 2 0 012-2h6
+                         a2 2 0 012 2v1" />
+              </svg>
+              Logout
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
   </div>
   }
 </header>

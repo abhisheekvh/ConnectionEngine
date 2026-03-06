@@ -14,17 +14,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// ===============================
+
 // Database
-// ===============================
+
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-// ===============================
 // Identity
-// ===============================
+
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 8;
@@ -40,9 +39,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
 
-// ===============================
-// 🔴 CRITICAL FIX: API must return 401/403, NOT redirect
-// ===============================
+
+//  CRITICAL FIX: API must return 401/403, NOT redirect
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Events.OnRedirectToLogin = context =>
@@ -70,9 +69,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     };
 });
 
-// ===============================
 // JWT Authentication (HttpOnly Cookie)
-// ===============================
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
@@ -92,7 +90,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ClockSkew = TimeSpan.Zero
     };
 
-    // 🔐 Read JWT from HttpOnly cookie
+    // Read JWT from HttpOnly cookie
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
@@ -106,14 +104,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     };
 });
 
-// ===============================
-// Authorization
-// ===============================
+
 builder.Services.AddAuthorization();
 
-// ===============================
-// CORS (Angular + Cookies)
-// ===============================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularPolicy", policy =>
@@ -126,9 +119,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-// ===============================
-// Rate Limiting (Optional)
-// ===============================
 builder.Services.AddRateLimiter(options =>
 {
     options.AddFixedWindowLimiter("auth", opt =>
@@ -138,14 +128,8 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
-// ===============================
-// Build App
-// ===============================
 var app = builder.Build();
 
-// ===============================
-// Middleware Pipeline
-// ===============================
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
