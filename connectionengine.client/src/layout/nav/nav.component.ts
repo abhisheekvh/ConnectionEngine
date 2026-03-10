@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../app/auth/auth/auth.service';
 import { LocationService } from '../../Services/location.service';
@@ -21,17 +21,22 @@ export class NavComponent implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private locationService: LocationService
-  ) { }
-
-  ngOnInit(): void {
-    this.loadUserInfo();
-    this.authService.isLoggedIn$().subscribe(isAuth => {
-      this.isLoggedIn = isAuth;
+  ) {
+    effect(() => {
+      const isAuth = this.authService.isLoggedIn()();
+      this.isLoggedIn = isAuth
       if (!isAuth) {
         this.email = '';
         this.userInitial = '';
       }
-    })
+
+    }) }
+
+  ngOnInit(): void {
+    this.loadUserInfo();
+    
+   
+   
   }
 
   private loadUserInfo(): void {

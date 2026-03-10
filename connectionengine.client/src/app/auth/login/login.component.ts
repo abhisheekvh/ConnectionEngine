@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service'
+import { LoginDTO } from '../UserDTO/LoginDTO';
 
 @Component({
   selector: 'app-login',
@@ -13,10 +14,11 @@ import { AuthService } from '../auth/auth.service'
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-
-  email = '';
-  password = '';
-  otp = '';
+  loginDto: LoginDTO = {
+    email: '',
+    password: '',
+    otp: ''
+  };
 
   constructor(
     private http: HttpClient,
@@ -27,20 +29,14 @@ export class LoginComponent {
   login(): void {
     this.http.post(
       '/api/auth/login',
-      {
-        email: this.email,
-        password: this.password,
-        otp: this.otp
-      },
+     this.loginDto,
       { withCredentials: true }
     ).subscribe({
       next: () => {
         this.authService.setLoggedIn();
         this.router.navigate(['/home']);
-       
-        this.email = '';
-        this.password = '';
-        this.otp = '';
+
+        this.loginDto = { email:'', password: '', otp: '' }
       },
       error: err => alert(err.error)
     });

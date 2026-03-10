@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { Router } from '@angular/router';
+import { signupDTO } from '../UserDTO/SignupDTO'
 
 @Component({
   selector: 'app-signup',
@@ -13,13 +14,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent {
-
-  email = '';
-  password = '';
-
-  qrText: string | null = null;
-  sharedKey: string | null = null;
-  showQr = false;
+  signupDto: signupDTO = {
+    email: '',
+    password: '',
+    qrText: null,
+    sharedKey: null,
+    showQr: false
+  };
+  
 
   constructor(
     private http: HttpClient,
@@ -29,10 +31,7 @@ export class SignupComponent {
   register() {
     this.http.post(
       '/api/auth/register',
-      {
-        email: this.email,
-        password: this.password
-      },
+      this.signupDto,
       { responseType: 'text' }
     ).subscribe({
       next: () => this.generateQrCode(),
@@ -42,12 +41,12 @@ export class SignupComponent {
 
   generateQrCode() {
     this.http.get<any>(
-      `/api/auth/2fa/setup?email=${encodeURIComponent(this.email)}`
+      `/api/auth/2fa/setup?email=${encodeURIComponent(this.signupDto.email)}`
     ).subscribe({
       next: res => {
-        this.qrText = res.qrText;
-        this.sharedKey = res.sharedKey;
-        this.showQr = true;
+        this.signupDto.qrText = res.qrText;
+        this.signupDto.sharedKey = res.sharedKey;
+        this.signupDto.showQr = true;
       },
       error: () => alert('Failed to generate QR code')
     });

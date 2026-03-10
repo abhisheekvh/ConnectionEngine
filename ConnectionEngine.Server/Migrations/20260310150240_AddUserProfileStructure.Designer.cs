@@ -4,6 +4,7 @@ using ConnectionEngine.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConnectionEngine.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260310150240_AddUserProfileStructure")]
+    partial class AddUserProfileStructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,8 +47,6 @@ namespace ConnectionEngine.Server.Migrations
 
                     b.HasIndex("UserProfileId")
                         .IsUnique();
-
-                    b.HasIndex("Lattitude", "Longitude");
 
                     b.ToTable("UserLocations");
                 });
@@ -83,8 +84,6 @@ namespace ConnectionEngine.Server.Migrations
 
                     b.HasIndex("UserProfileId")
                         .IsUnique();
-
-                    b.HasIndex("MinPreferredAge", "MaxPreferredAge");
 
                     b.ToTable("UserPreferences");
                 });
