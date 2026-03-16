@@ -26,10 +26,15 @@ public class AuthController : ControllerBase
         _config = config;
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    
     [HttpGet("authloggeduser")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult authloggeduser()
     {
+        if(User.Identity ==null || !User.Identity.IsAuthenticated)
+        {
+            return Ok(new { email = (string?)null });
+        }
         return  Ok( new { email = User.FindFirstValue(ClaimTypes.Email) });
     }
 

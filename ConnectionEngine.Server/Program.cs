@@ -1,5 +1,7 @@
 ﻿using ConnectionEngine.Server.Data;
 using ConnectionEngine.Server.Entities;
+using ConnectionEngine.Server.Repositories;
+using ConnectionEngine.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
@@ -21,6 +23,9 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped<IUser, User>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Identity
 

@@ -10,11 +10,13 @@ const PROXY_CONFIG = [
   {
     context: [
       "/weatherforecast",
-      "/api"             
+      "/api"
     ],
     target,
     secure: false,
-    changeOrigin: true
+    changeOrigin: true,
+    logLevel: "debug",
+    cookieDomainRewrite: "localhost"
   }
 ];
 

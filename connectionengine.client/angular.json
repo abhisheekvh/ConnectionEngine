@@ -79,7 +79,7 @@
           "options": {
             "proxyConfig": "proxy.conf.js",
             "port": 54233,
-            "ssl": true
+            "ssl": false
 
 
           }

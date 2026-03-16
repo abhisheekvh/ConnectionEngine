@@ -1,40 +1,52 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, tap, map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private loggedin = signal(false);
+  loggedIn = signal(false);
 
   constructor(private http: HttpClient) { }
 
-  /** Called on app start or refresh */
-  isAuthenticated(){
+  /** Restore login state after refresh */
+  isAuthenticated(): Observable<boolean> {
+
     return this.http.get<{ email?: string }>(
       '/api/auth/authloggeduser',
       { withCredentials: true }
-    ).subscribe(res => {
-      this.loggedin.set(!!res?.email)
-    });
-  }
+    ).pipe(
 
-  /** Read-only observable for UI */
-  isLoggedIn() {
-  return this.loggedin;
+      map(res => !!res?.email),
+
+      tap(isAuth => {
+        this.loggedIn.set(isAuth);
+        console.log("loggedIn value:", this.loggedIn());
+      }),
+
+      catchError(() => {
+        this.loggedIn.set(false);
+        console.log("loggedIn value:", this.loggedIn());
+        return of(false);
+      })
+
+    );
   }
 
   setLoggedIn(): void {
-    this.loggedin.set(true);
+    this.loggedIn.set(true);
   }
 
   logout(): Observable<void> {
-    this.loggedin.set(false);
+
+    this.loggedIn.set(false);
+
     return this.http.post<void>(
       '/api/auth/logout',
       {},
       { withCredentials: true }
     );
+
   }
 }

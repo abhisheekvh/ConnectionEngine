@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, effect, OnInit } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../app/auth/auth/auth.service';
 import { LocationService } from '../../Services/location.service';
@@ -11,35 +11,28 @@ import { LocationService } from '../../Services/location.service';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css']
 })
-export class NavComponent implements OnInit {
+export class NavComponent {
 
   email = '';
   userInitial = '';
-  isLoggedIn=false
 
-  constructor(
-    private http: HttpClient,
-    private authService: AuthService,
-    private locationService: LocationService
-  ) {
+  constructor(private http: HttpClient, public authService: AuthService, private locationService: LocationService)
+  {
+
     effect(() => {
-      const isAuth = this.authService.isLoggedIn()();
-      this.isLoggedIn = isAuth
-      if (!isAuth) {
+      const isAuth = this.authService.loggedIn();
+      if (isAuth) {
+        this.loadUserInfo();
+      }
+      else {
         this.email = '';
         this.userInitial = '';
       }
-
-    }) }
-
-  ngOnInit(): void {
-    this.loadUserInfo();
-    
-   
-   
+    });
   }
 
-  private loadUserInfo(): void {
+  private loadUserInfo(): void
+  {
     this.http.get<any>(
       '/api/member/profile',
       { withCredentials: true }
@@ -47,20 +40,20 @@ export class NavComponent implements OnInit {
       next: user => {
         this.email = user.email;
         this.userInitial = user.email?.charAt(0).toUpperCase();
+
       },
-      error: () => {
-        // do nothing — guard handles auth
-      }
+      error: () => { }
     });
   }
-
-  logout(): void {
+  logout(): void
+  {
     this.authService.logout().subscribe(() => {
       window.location.href = '/login';
     });
   }
-
-  getCurrentLocation(): void {
+  getCurrentLocation(): void
+  {
     this.locationService.getCurrentLocation();
   }
+
 }

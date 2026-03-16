@@ -9,7 +9,7 @@ namespace ConnectionEngine.Server.DTOs.User
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        [Required]
+       
         public string? UserId { get; set; }   // FK to ApplicationUser
 
         [Required]
@@ -20,7 +20,7 @@ namespace ConnectionEngine.Server.DTOs.User
         public int Age { get; set; }
 
         [Required]
-        public Gender Gender { get; set; }
+        public string? Gender { get; set; }
 
         [MaxLength(500)]
         public string? Bio { get; set; }
@@ -34,7 +34,7 @@ namespace ConnectionEngine.Server.DTOs.User
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation
-        public ApplicationUser User { get; set; }
+        public ApplicationUser? User { get; set; }
 
         public UserLocation? Location { get; set; }
 
